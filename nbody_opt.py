@@ -5,6 +5,10 @@
     NetID: xc918
 
     Combination of improvement.
+    "Reducing function call overhead
+    Using alternatives to membership testing of lists
+    Using local rather than global variables
+    Using data aggregation to reduce loop overheads"
         
     First test, 86s.
     Second test, 86.9s.
