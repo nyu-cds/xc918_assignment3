@@ -3,14 +3,14 @@
 
     Author: Xing Cui
     NetID: xc918
-
-    This is the first requirement: Reducing function call overhead.
-    FUNCTION CALL OVERHEAD ---ONLY--- in this file.
+    
+    This is the second requirement: Using local rather than global variables
+    Using local rather than global variables ---ONLY--- in this file.
 
     First test, 86s.
     Second test, 86.9s.
 
-    Running time: 36.7
+    Running time: 86.7s, 89.2s, 85.9s. Not a good choice in this case.
 """
 
 
@@ -65,19 +65,21 @@ def compute_mag(dt, dx, dy, dz):
     return dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))
 
 def update_vs(v1, v2, dt, dx, dy, dz, m1, m2):
-    v1[0] -= dx * m1 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m2, dt, dx, dy, dz)
-    v1[1] -= dy * m1 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m2, dt, dx, dy, dz)
-    v1[2] -= dz * m1 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m2, dt, dx, dy, dz)
-    v2[0] += dx * m2 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m1, dt, dx, dy, dz)
-    v2[1] += dy * m2 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m1, dt, dx, dy, dz)
-    v2[2] += dz * m2 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m1, dt, dx, dy, dz)
+    v1[0] -= dx * compute_b(m2, dt, dx, dy, dz)
+    v1[1] -= dy * compute_b(m2, dt, dx, dy, dz)
+    v1[2] -= dz * compute_b(m2, dt, dx, dy, dz)
+    v2[0] += dx * compute_b(m1, dt, dx, dy, dz)
+    v2[1] += dy * compute_b(m1, dt, dx, dy, dz)
+    v2[2] += dz * compute_b(m1, dt, dx, dy, dz)
 
 def update_rs(r, dt, vx, vy, vz):
     r[0] += dt * vx
     r[1] += dt * vy
     r[2] += dt * vz
 
-def advance(dt):
+# Add BODIES as input to the following functions, which uses BODIES and BODIES used to be global variables.
+
+def advance(dt, BODIES):
     '''
         advance the system one timestep
     '''
@@ -87,30 +89,18 @@ def advance(dt):
             if (body1 != body2) and not (body2 in seenit):
                 ([x1, y1, z1], v1, m1) = BODIES[body1]
                 ([x2, y2, z2], v2, m2) = BODIES[body2]
-                (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)#compute_deltas(x1, x2, y1, y2, z1, z2)
-                #update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
-                mag = dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))
-                mag_b1 = m1 * mag
-                mag_b2 = m2 * mag
-                v1[0] -= dx * mag_b1#compute_b(m2, dt, dx, dy, dz)
-                v1[1] -= dy * mag_b1#compute_b(m2, dt, dx, dy, dz)
-                v1[2] -= dz * mag_b1#compute_b(m2, dt, dx, dy, dz)
-                v2[0] += dx * mag_b2#compute_b(m1, dt, dx, dy, dz)
-                v2[1] += dy * mag_b2#compute_b(m1, dt, dx, dy, dz)
-                v2[2] += dz * mag_b2#compute_b(m1, dt, dx, dy, dz)
+                (dx, dy, dz) = compute_deltas(x1, x2, y1, y2, z1, z2)
+                update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
                 seenit.append(body1)
         
     for body in BODIES.keys():
         (r, [vx, vy, vz], m) = BODIES[body]
-        #update_rs(r, dt, vx, vy, vz)
-        r[0] += dt * vx
-        r[1] += dt * vy
-        r[2] += dt * vz
+        update_rs(r, dt, vx, vy, vz)
 
 def compute_energy(m1, m2, dx, dy, dz):
     return (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)
     
-def report_energy(e=0.0):
+def report_energy(BODIES, e=0.0):
     '''
         compute the energy and return it so that it can be printed
     '''
@@ -120,8 +110,8 @@ def report_energy(e=0.0):
             if (body1 != body2) and not (body2 in seenit):
                 ((x1, y1, z1), v1, m1) = BODIES[body1]
                 ((x2, y2, z2), v2, m2) = BODIES[body2]
-                (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)#compute_deltas(x1, x2, y1, y2, z1, z2)
-                e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)#compute_energy(m1, m2, dx, dy, dz)
+                (dx, dy, dz) = compute_deltas(x1, x2, y1, y2, z1, z2)
+                e -= compute_energy(m1, m2, dx, dy, dz)
                 seenit.append(body1)
         
     for body in BODIES.keys():
@@ -130,7 +120,7 @@ def report_energy(e=0.0):
         
     return e
 
-def offset_momentum(ref, px=0.0, py=0.0, pz=0.0):
+def offset_momentum(ref, BODIES, px=0.0, py=0.0, pz=0.0):
     '''
         ref is the body in the center of the system
         offset values from this reference
@@ -147,22 +137,23 @@ def offset_momentum(ref, px=0.0, py=0.0, pz=0.0):
     v[2] = pz / m
 
 
-def nbody(loops, reference, iterations):
+def nbody(loops, reference, iterations, BODIES):
     '''
         nbody simulation
         loops - number of loops to run
         reference - body at center of system
         iterations - number of timesteps to advance
     '''
+
     # Set up global state
-    offset_momentum(BODIES[reference])
+    offset_momentum(BODIES[reference], BODIES)
 
     for _ in range(loops):
-        report_energy()
+        report_energy(BODIES)
         for _ in range(iterations):
-            advance(0.01)
-        print(report_energy())
+            advance(0.01, BODIES)
+        print(report_energy(BODIES))
 
 if __name__ == '__main__':
-    nbody(100, 'sun', 20000)
+    nbody(100, 'sun', 20000, BODIES)
 

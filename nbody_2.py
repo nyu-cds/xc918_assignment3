@@ -3,14 +3,14 @@
 
     Author: Xing Cui
     NetID: xc918
-
-    This is the first requirement: Reducing function call overhead.
-    FUNCTION CALL OVERHEAD ---ONLY--- in this file.
+        
+    This is the second requirement: Using alternatives to membership testing of lists
+    Using alternatives to membership testing of lists ---ONLY--- in this file.
 
     First test, 86s.
     Second test, 86.9s.
 
-    Running time: 36.7
+    Running time: 85.6s and 85.8s. Only a little bit improvement.
 """
 
 
@@ -65,12 +65,12 @@ def compute_mag(dt, dx, dy, dz):
     return dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))
 
 def update_vs(v1, v2, dt, dx, dy, dz, m1, m2):
-    v1[0] -= dx * m1 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m2, dt, dx, dy, dz)
-    v1[1] -= dy * m1 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m2, dt, dx, dy, dz)
-    v1[2] -= dz * m1 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m2, dt, dx, dy, dz)
-    v2[0] += dx * m2 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m1, dt, dx, dy, dz)
-    v2[1] += dy * m2 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m1, dt, dx, dy, dz)
-    v2[2] += dz * m2 * dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))#compute_b(m1, dt, dx, dy, dz)
+    v1[0] -= dx * compute_b(m2, dt, dx, dy, dz)
+    v1[1] -= dy * compute_b(m2, dt, dx, dy, dz)
+    v1[2] -= dz * compute_b(m2, dt, dx, dy, dz)
+    v2[0] += dx * compute_b(m1, dt, dx, dy, dz)
+    v2[1] += dy * compute_b(m1, dt, dx, dy, dz)
+    v2[2] += dz * compute_b(m1, dt, dx, dy, dz)
 
 def update_rs(r, dt, vx, vy, vz):
     r[0] += dt * vx
@@ -81,31 +81,21 @@ def advance(dt):
     '''
         advance the system one timestep
     '''
-    seenit = []
+    # change seenit from list to set.
+    seenit = set()
     for body1 in BODIES.keys():
         for body2 in BODIES.keys():
             if (body1 != body2) and not (body2 in seenit):
                 ([x1, y1, z1], v1, m1) = BODIES[body1]
                 ([x2, y2, z2], v2, m2) = BODIES[body2]
-                (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)#compute_deltas(x1, x2, y1, y2, z1, z2)
-                #update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
-                mag = dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))
-                mag_b1 = m1 * mag
-                mag_b2 = m2 * mag
-                v1[0] -= dx * mag_b1#compute_b(m2, dt, dx, dy, dz)
-                v1[1] -= dy * mag_b1#compute_b(m2, dt, dx, dy, dz)
-                v1[2] -= dz * mag_b1#compute_b(m2, dt, dx, dy, dz)
-                v2[0] += dx * mag_b2#compute_b(m1, dt, dx, dy, dz)
-                v2[1] += dy * mag_b2#compute_b(m1, dt, dx, dy, dz)
-                v2[2] += dz * mag_b2#compute_b(m1, dt, dx, dy, dz)
-                seenit.append(body1)
+                (dx, dy, dz) = compute_deltas(x1, x2, y1, y2, z1, z2)
+                update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
+                #update append to add
+                seenit.add(body1)
         
     for body in BODIES.keys():
         (r, [vx, vy, vz], m) = BODIES[body]
-        #update_rs(r, dt, vx, vy, vz)
-        r[0] += dt * vx
-        r[1] += dt * vy
-        r[2] += dt * vz
+        update_rs(r, dt, vx, vy, vz)
 
 def compute_energy(m1, m2, dx, dy, dz):
     return (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)
@@ -114,15 +104,17 @@ def report_energy(e=0.0):
     '''
         compute the energy and return it so that it can be printed
     '''
-    seenit = []
+    # change seenit from list to set.
+    seenit = set()
     for body1 in BODIES.keys():
         for body2 in BODIES.keys():
             if (body1 != body2) and not (body2 in seenit):
                 ((x1, y1, z1), v1, m1) = BODIES[body1]
                 ((x2, y2, z2), v2, m2) = BODIES[body2]
-                (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)#compute_deltas(x1, x2, y1, y2, z1, z2)
-                e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)#compute_energy(m1, m2, dx, dy, dz)
-                seenit.append(body1)
+                (dx, dy, dz) = compute_deltas(x1, x2, y1, y2, z1, z2)
+                e -= compute_energy(m1, m2, dx, dy, dz)
+                # as the previous step
+                seenit.add(body1)
         
     for body in BODIES.keys():
         (r, [vx, vy, vz], m) = BODIES[body]
