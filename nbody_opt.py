@@ -21,7 +21,7 @@
     R = L_origin/L_opt = 3.31226
 """
 
-
+from itertools import combinations
 
 PI = 3.14159265358979323
 SOLAR_MASS = 4 * PI * PI
@@ -62,7 +62,7 @@ BODIES = {
                  -9.51592254519715870e-05 * DAYS_PER_YEAR],
                 5.15138902046611451e-05 * SOLAR_MASS)}
 
-from itertools import combinations
+
 Pairwise_name = set(combinations(BODIES,2))
 
 
