@@ -144,7 +144,7 @@ if __name__ == '__main__':
                     5.15138902046611451e-05 * SOLAR_MASS)}
 
 
-    Pairwise_name = set(combinations(BODIES,2))
+    Pairwise_name = set(combinations(BODIES,2))# combination gives all pairs of 5 factors, such as (sun, jupiter), (sun, uranus).
 
     nbody(100, 'sun', 20000, BODIES)
 
