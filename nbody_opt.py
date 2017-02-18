@@ -65,7 +65,7 @@ def report_energy(BODIES, e=0.0):
         e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)#compute_energy(m1, m2, dx, dy, dz) removed.
     
         
-    for body in BODIES.keys():
+    for body in BODIES:
         (r, [vx, vy, vz], m) = BODIES[body]
         e += m * (vx * vx + vy * vy + vz * vz) / 2.
         
@@ -76,7 +76,7 @@ def offset_momentum(ref, BODIES, px=0.0, py=0.0, pz=0.0):
         ref is the body in the center of the system
         offset values from this reference
     '''
-    for body in BODIES.keys():
+    for body in BODIES:
         (r, [vx, vy, vz], m) = BODIES[body]
         px -= vx * m
         py -= vy * m
