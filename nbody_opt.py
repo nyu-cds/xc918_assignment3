@@ -1,3 +1,6 @@
+
+
+
 """
     N-body simulation.
 
@@ -22,6 +25,9 @@
 """
 
 from itertools import combinations
+import logging
+
+logging.basicConfig(filename="sample.log", level = logging.DEBUG)
 
 
 
@@ -102,6 +108,7 @@ def nbody(loops, reference, iterations, BODIES):
         for _ in range(iterations):
             advance(0.01, BODIES)
         print(report_energy(BODIES))
+        logging.info(report_energy(BODIES))
 
 if __name__ == '__main__':
     PI = 3.14159265358979323
@@ -147,4 +154,5 @@ if __name__ == '__main__':
     Pairwise_name = set(combinations(BODIES,2))# combination gives all pairs of 5 factors, such as (sun, jupiter), (sun, uranus).
 
     nbody(100, 'sun', 20000, BODIES)
+    logging.info('test')
 

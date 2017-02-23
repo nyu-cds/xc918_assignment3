@@ -9,3 +9,20 @@ Using alternatives to membership testing of lists: For the nbody_2, I changed li
 Using local rather than global variables: Added BODIES as local variables.
 
 Using data aggregation to reduce loop overheads: In order to improve speed, we could save some checking time since it is unnecessary once we have all pair of names.
+
+
+# xc918_assignment4
+
+Code review team member:
+
+Reviewers:
+
+Hao Liu (hl2514)
+
+Yuting Gui (yg1281)
+
+Reviewee:
+
+Xing Cui (xc918)
+
+One thing corrected in the nbody_opt.py to correct the outputs.
