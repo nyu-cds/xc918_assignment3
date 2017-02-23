@@ -44,12 +44,12 @@ def advance(dt, BODIES):
         mag = dt * ((dx * dx + dy * dy + dz * dz) ** (-1.5))
         mag_b1 = m1 * mag
         mag_b2 = m2 * mag
-        v1[0] -= dx * mag_b1#compute_b(m2, dt, dx, dy, dz) modified.
-        v1[1] -= dy * mag_b1#compute_b(m2, dt, dx, dy, dz) modified.
-        v1[2] -= dz * mag_b1#compute_b(m2, dt, dx, dy, dz) modified.
-        v2[0] += dx * mag_b2#compute_b(m1, dt, dx, dy, dz) modified.
-        v2[1] += dy * mag_b2#compute_b(m1, dt, dx, dy, dz) modified.
-        v2[2] += dz * mag_b2#compute_b(m1, dt, dx, dy, dz) modified.
+        v1[0] -= dx * mag_b2#compute_b(m2, dt, dx, dy, dz) modified.
+        v1[1] -= dy * mag_b2#compute_b(m2, dt, dx, dy, dz) modified.
+        v1[2] -= dz * mag_b2#compute_b(m2, dt, dx, dy, dz) modified.
+        v2[0] += dx * mag_b1#compute_b(m1, dt, dx, dy, dz) modified.
+        v2[1] += dy * mag_b1#compute_b(m1, dt, dx, dy, dz) modified.
+        v2[2] += dz * mag_b1#compute_b(m1, dt, dx, dy, dz) modified.
         
 
     for body in BODIES.keys():
