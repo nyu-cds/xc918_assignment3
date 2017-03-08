@@ -10,10 +10,10 @@ Function: hypotenuse at line 45
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
     45                                           def hypotenuse(x,y):
-    46                                               """
+    46                                               
     47                                               Return sqrt(x**2 + y**2) for two arrays, a and b.
     48                                               x and y must be two-dimensional arrays of the same shape.
-    49                                               """
+    49                                               
     50         1       736718 736718.0     26.3      xx = multiply(x,x)
     51         1       729139 729139.0     26.1      yy = multiply(y,y)
     52         1       708603 708603.0     25.3      zz = add(xx, yy)
@@ -34,10 +34,10 @@ Function: hypotenuse at line 36
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
     36                                           def hypotenuse(x,y):
-    37                                               """
+    37                                               
     38                                               Return sqrt(x**2 + y**2) for two arrays, a and b.
     39                                               x and y must be two-dimensional arrays of the same shape.
-    40                                               """
+    40                                               
     41                                               # xx = x*x
     42                                               # yy = y*y
     43                                               # zz = xx + yy
