@@ -13,12 +13,12 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 n = input('input how many numbers you want to sort: ')
 n = int(n)
-nums = [np.random.randint(0,n) for i in range(n)]
+nums = [np.random.randint(0,n*3) for i in range(n)]
 
 if rank == 0:
 	if len(nums) < 2:
 		raise ValueError
-		print 'Oops, value error found.'
+		print 'Oops, value error found. Need at least 2 numbers.'
 	else:
 		max_nums = splitting(nums, size) # see splitting function in functions.py
 		result = sorting(nums, max_nums, size) # see sorting function in functions.py

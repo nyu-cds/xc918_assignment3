@@ -16,13 +16,13 @@ size = comm.Get_size()
 
 class TestSort(unittest.TestCase):
  
-    def setUp(self):
+    def set(self):
         pass
         
-    def test_split_nums(self):
+    def test_splitting(self):
         assert splitting([8,4,3,6,5,2,1,9,7], 4) == [8]
         
-    def test_create_sort(self):
+    def test_sorting(self):
         assert sorting([8,4,3,6,5,2,1,9,7], [3,7,11], 3).tolist() == np.array([[3,2,1],[4,6,5,7],[8,9]]).tolist()
         
 

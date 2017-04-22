@@ -17,7 +17,7 @@ def splitting(nums, size):
 	"""spliting number list by size
 	"""
 	coverage = max(nums) - min(nums)
-	tmp = np.array_split(np.array(range(coverage+1)), size)
+	tmp = np.array_split(np.asarray(range(coverage+1)), size)
 	for x in tmp:
 		max_nums = [max(x)]
 	return max_nums
