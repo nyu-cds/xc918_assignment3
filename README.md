@@ -1,3 +1,6 @@
+# Assignment 11
+three files: assignment file, function file, test file.
+
 # Assignment 10
 There is a little issue that user has to enter an input right after using command "mpiexec -n 5 python mpi_assignment_2.py".
 
