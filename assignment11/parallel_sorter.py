@@ -13,7 +13,9 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 n = input('input how many numbers you want to sort: ')
 n = int(n)
-nums = [np.random.randint(0,n*3) for i in range(n)]
+nums = [np.random.randint(0,n**3) for i in range(n)]
+print 'Unsorted: \n'
+print nums
 
 if rank == 0:
 	if len(nums) < 2:
@@ -32,6 +34,7 @@ if rank == 0:
 	final_result = np.concatenate(final_result)
 
 if __name__ == '__main__':
+	print 'Sorted: \n'
 	print(final_result)
 
 
