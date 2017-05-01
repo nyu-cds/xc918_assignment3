@@ -20,7 +20,7 @@ print nums
 if rank == 0:
 	if len(nums) < 2:
 		raise ValueError
-		print 'Oops, value error found. Need at least 2 numbers.'
+		print('Oops, value error found. Need at least 2 numbers.')
 	else:
 		max_nums = splitting(nums, size) # see splitting function in functions.py
 		result = sorting(nums, max_nums, size) # see sorting function in functions.py
